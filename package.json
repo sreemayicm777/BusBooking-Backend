@@ -5,8 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start":"node server.js",
-    "dev":"nodemon server.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
   "author": "sreemayi",
   "license": "ISC",
@@ -22,7 +22,8 @@
     "pdfkit": "^0.17.1",
     "qrcode": "^1.5.4",
     "razorpay": "^2.9.6",
-    "twilio": "^5.7.3"
+    "twilio": "^5.7.3",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"

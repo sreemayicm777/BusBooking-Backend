@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const generateToken = require("../utils/generateToken");
 
 //Register a user
-exports.registerUser = async(req,res) =>{
+exports.registerUser = async(req,res,next) =>{
     try {
         
         const {name, email, password } = req.body;
@@ -39,7 +39,7 @@ exports.registerUser = async(req,res) =>{
 
 //Login User
 
-exports.loginUser = async(req,res) => {
+exports.loginUser = async(req,res,next) => {
     try {
         const{ email, password }=req.body;
 

@@ -59,18 +59,19 @@ exports.updateBus = async (req, res, next) => {
 // @desc Delete a bus route
 exports.deleteBus = async (req, res, next) => {
   try {
-    const bus = await Bus.findById(req.params.id);
-    if (!bus) {
+    const deletedBus = await Bus.findByIdAndDelete(req.params.id);
+
+    if (!deletedBus) {
       res.status(404);
       throw new Error("Bus not found");
     }
 
-    await Bus.findByIdAndDelete(req.params.id);
-    res.status(200).json({ message: "Bus deleted" });
+    res.status(200).json({ message: "Bus deleted successfully" });
   } catch (err) {
     next(err);
   }
 };
+
 
 // @desc Disable (deactivate) a bus
 exports.disableBus = async (req, res, next) => {
@@ -92,3 +93,29 @@ exports.disableBus = async (req, res, next) => {
     next(err);
   }
 };
+
+//search buses by location and date 
+exports.searchBus =  async(req, res, next) =>{
+    try {
+      const { from, to, date }=req.query;
+
+      if(!from || !to || !date){
+        res.status(400);
+        throw new Error("Please provide from,to,date");
+      }
+
+      const travelDate = new Date(date);
+      const nextDay = new Date(travelDate);
+      nextDay.setDate(nextDay.getDate() + 1);
+
+      const buses = await Bus.find({
+        from: { $regex: new RegExp(from, 'i') },
+        to: { $regex: new RegExp(to, 'i')},
+        startDateTime: {$gte: travelDate, $lt: nextDay },
+        isActive: true
+      });
+      res.status(200).json(buses);
+    } catch (err) {
+      next (err)
+    }
+}
