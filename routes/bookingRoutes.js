@@ -9,6 +9,7 @@ router.get('/my-bookings', protect, bookingControllers.getMyBookings);
 router.put('/cancel/:id', protect, bookingControllers.cancelBooking);
 
 // Admin-only route
+
 router.get('/all-bookings', protect, adminOnly, bookingControllers.getAllBookings);
 
 
