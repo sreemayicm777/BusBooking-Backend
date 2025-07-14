@@ -3,8 +3,10 @@ const router = express.Router();
 const bookingControllers = require("../controllers/bookingController");
 const { protect } = require("../middlewares/authMiddleware");
 const { adminOnly } = require('../middlewares/roleMiddleware');
+const validate =  require("../middlewares/validate");
+const { bookBusSchema } = require("../validations/bookingValidation");
 
-router.post('/', protect, bookingControllers.bookBus);
+router.post('/', protect, validate(bookBusSchema), bookingControllers.bookBus);
 router.get('/my-bookings', protect, bookingControllers.getMyBookings);
 router.put('/cancel/:id', protect, bookingControllers.cancelBooking);
 
