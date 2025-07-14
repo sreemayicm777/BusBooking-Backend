@@ -4,11 +4,25 @@ const StudioBase = require("twilio/lib/rest/StudioBase");
 const bookingSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        required: true
     },
     bus: {
         type:mongoose.Schema.Types.ObjectId,
-        ref:'Bus'
+        ref:'Bus',
+        required: true
+    },
+    from: { 
+        type: String,
+        required: true 
+    },  // selected stop
+    to: {
+         type: String,
+         required: true
+     },    // selected stop
+    farePerSeat: 
+        { type: Number,
+          required: true 
     },
     seatsBooked: {
         type: Number,

@@ -6,8 +6,7 @@ const { adminOnly } = require('../middlewares/roleMiddleware');
 
 
 //public (for users)
-router.get('/', busControllers.getAllBuses);
-router.get('/search', busControllers.searchBus);  //api/buses/search?from=Kottayam&to=Bangalore&date=2025-07-20
+router.get('/', busControllers.getBuses);  //api/buses?from=Kottayam&to=Bangalore&date=2025-07-20
 router.get('/:id', busControllers.getBusById);
 
 //Admin-only routes

@@ -6,18 +6,25 @@ const { v4: uuidv4 } = require("uuid");
 //Book a Bus 
 exports.bookBus = async (req, res, next) => {
     try {
-      const { busId, seatsBooked } = req.body;
+      const { busId,from, to, seatsBooked } = req.body;
 
       const bus = await Bus.findById(busId);
-      if(!bus){
+      if(!bus || !bus.isActive){
         res.status(404);
-        throw new Error("Bus Not Founs!");
+        throw new Error("Bus Not Found or Not Active!");
       }
 
-      if(!bus.isActive){
-        res.status(400);
-        throw new Error("Bus is Currently Not Active");
-      }
+      const fromIndex = bus.stops.findIndex((s) => s.name === from);
+      const toIndex = bus.stops.findIndex((s) => s.name === to);
+
+      if (fromIndex === -1 || toIndex === -1 || toIndex <= fromIndex) {
+      res.status(400);
+      throw new Error("Invalid stop selection");
+    }
+
+    const farePerSeat = bus.stops[toIndex].fareFromStart - bus.stops[fromIndex].fareFromStart;
+
+    const totalFare = farePerSeat * seatsBooked;
 
       if(bus.seatsAvailable < seatsBooked){
         res.status(400);
@@ -27,11 +34,12 @@ exports.bookBus = async (req, res, next) => {
       bus.seatsAvailable -= seatsBooked;
       await bus.save();
 
-      const totalFare = seatsBooked * bus.fare;
-
       const booking = await Booking.create({
         user: req.user._id,
         bus: bus._id,
+        from,
+        to,
+        farePerSeat,
         seatsBooked,
         totalFare,
         bookingId: uuidv4(),
@@ -93,7 +101,7 @@ exports.getAllBookings = async (req, res, next) => {
   try {
     console.log(req.user);
     
-    const bookings = await Booking.find()
+    const bookings = await Booking.find({ Status:"Confirmed"})
       .populate('user', 'name email')   // show user info
       .populate('bus')  
       .sort({ createdAt: -1 });
