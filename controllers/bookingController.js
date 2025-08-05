@@ -99,7 +99,7 @@ exports.cancelBooking = async (req, res, next) => {
 
 exports.getAllBookings = async (req, res, next) => {
   try {
-    console.log(req.user);
+    // console.log(req.user);
     
     const bookings = await Booking.find({ Status:"Confirmed"})
       .populate('user', 'name email')   // show user info
